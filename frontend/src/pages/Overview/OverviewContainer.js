@@ -64,12 +64,14 @@ class OverviewContainer extends Component {
           <Overview {...this.props} />
           <ProjectDialogContainer location={this.props.location} />
           <AdditionalInfo
-            resources={this.props.projects}
-            idForInfo={this.props.idForInfo}
+            additionalData={
+              this.props.projects.find((item) => item.data.id === this.props.idForInfo)?.data?.additionalData || {}
+            }
             isAdditionalDataShown={this.props.isProjectAdditionalDataShown}
             hideAdditionalData={this.props.hideProjectAdditionalData}
             submitAdditionalData={(additionalData) => this.props.editProject(this.props.idForInfo, { additionalData })}
           />
+
           {this.props.permissionDialogShown ? <ProjectPermissionsContainer {...this.props} /> : null}
         </div>
       </div>

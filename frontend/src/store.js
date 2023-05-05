@@ -30,7 +30,7 @@ function configureTBStore() {
       getDefaultMiddleware({
         serializableCheck: false,
         immutableCheck: false
-      }).concat(routerMiddleware, sagaMiddleware, createDebounce(), createLogger(loggerOptions))
+      }).concat(routerMiddleware, sagaMiddleware, createDebounce())
   });
 
   store.subscribe(() => {
