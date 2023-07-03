@@ -359,6 +359,27 @@ class Api {
     });
   };
 
+  // TODO workflowitem.correct
+  correctWorkflowItem = (projectId, subprojectId, workflowitemId, changes) => {
+    const { currency, amount, exchangeRate, ...minimalChanges } = changes;
+
+    const changesToSend =
+      changes.amountType === "N/A"
+        ? minimalChanges
+        : {
+            ...minimalChanges,
+            currency,
+            amount,
+            exchangeRate: exchangeRate ? exchangeRate.toString() : undefined
+          };
+    return instance.post(`/workflowitem.update`, {
+      projectId,
+      subprojectId,
+      workflowitemId,
+      ...changesToSend
+    });
+  };
+
   reorderWorkflowitems = (projectId, subprojectId, ordering) =>
     instance.post(`/subproject.reorderWorkflowitems`, { projectId, subprojectId, ordering });
 

@@ -305,3 +305,36 @@ export function assignWorkflowitem(
     .invokePublish(streamName, streamItemKey, streamItem)
     .then(() => event);
 }
+
+// TODO workflowitem.correct
+export function correctWorkflowitem(
+  conn: ConnToken,
+  issuer: Issuer,
+  newAssignee: string,
+  projectId: string,
+  subprojectId: string,
+  workflowitemId: string,
+): Promise<void> {
+  const intent: Intent = "workflowitem.correct";
+
+  const event = {
+    key: workflowitemId,
+    intent,
+    createdBy: issuer.name,
+    createdAt: new Date().toISOString(),
+    dataVersion: 1,
+    data: {
+      identity: newAssignee,
+    },
+  };
+
+  const streamName = projectId;
+  const streamItemKey = [workflowitemsGroupKey(subprojectId), workflowitemId];
+  const streamItem = { json: event };
+
+  logger.debug(`Publishing ${intent} to ${streamName}/${streamItemKey}`);
+  return conn.multichainClient
+    .getRpcClient()
+    .invokePublish(streamName, streamItemKey, streamItem)
+    .then(() => event);
+}

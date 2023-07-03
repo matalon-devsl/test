@@ -54,6 +54,7 @@ type Intent =
   | "workflowitem.viewHistory"
   | "workflowitem.assign"
   | "workflowitem.update"
+  | "workflowitem.correct"
   | "workflowitem.close"
   | "notification.create"
   | "network.registerNode"
