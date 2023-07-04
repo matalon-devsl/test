@@ -104,6 +104,7 @@ const en = {
     revoke: "revoke",
     reject: "Reject",
     rejected: "Rejected",
+    correct: "Correct",
     search: "Search",
     show_permissions: "Show Permissions",
     status: "Status",
@@ -258,6 +259,7 @@ const en = {
     approval_required: "Approval required",
     assignee: "Assignee",
     edit_item: "Edit workflowitem",
+    correct_item: "Correct workflowitem",
     exchange_rate: "Exchange rate",
 
     workflow_budget_allocated: "allocated",

@@ -49,6 +49,7 @@ import {
   SHOW_REASON_DIALOG,
   SHOW_SUBPROJECT_ASSIGNEES,
   SHOW_SUBPROJECT_CONFIRMATION_DIALOG,
+  SHOW_WORKFLOW_CORRECT,
   SHOW_WORKFLOW_CREATE,
   SHOW_WORKFLOW_EDIT,
   SHOW_WORKFLOW_PREVIEW,
@@ -223,6 +224,23 @@ export default function detailviewReducer(state = defaultState, action) {
         editDialogShown: true,
         dialogTitle: strings.workflow.edit_item
       });
+    case SHOW_WORKFLOW_CORRECT:
+      return state.merge({
+        workflowToAdd: state
+          .getIn(["workflowToAdd"])
+          .set("id", action.id)
+          .set("displayName", action.displayName)
+          .set("amount", action.amount)
+          .set("exchangeRate", action.exchangeRate || state.getIn(["workflowToAdd", "exchangeRate"]))
+          .set("amountType", action.amountType)
+          .set("description", action.description)
+          .set("currency", action.currency)
+          .set("documents", fromJS(action.documents))
+          .set("dueDate", action.dueDate)
+          .set("workflowitemType", action.workflowitemType),
+        correctionDialogShown: true,
+        dialogTitle: strings.workflow.correct_item
+      });
     case ASSIGN_WORKFLOWITEM_SUCCESS:
       return state.updateIn(["submittedWorkflowItems"], (workflowitems) => [
         ...workflowitems,
@@ -249,6 +267,7 @@ export default function detailviewReducer(state = defaultState, action) {
       return state.merge({
         editDialogShown: false,
         creationDialogShown: false,
+        correctionDialogShown: false,
         workflowToAdd: defaultState.getIn(["workflowToAdd"]),
         currentStep: defaultState.get("currentStep")
       });

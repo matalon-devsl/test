@@ -13,6 +13,7 @@ export const CLOSE_DRAWER = "CLOSE_DRAWER";
 export const WORKFLOWITEMS_SELECTED = "WORKFLOWITEMS_SELECTED";
 
 export const SHOW_WORKFLOW_EDIT = "SHOW_WORKFLOW_EDIT";
+export const SHOW_WORKFLOW_CORRECT = "SHOW_WORKFLOW_CORRECT";
 
 export const SUBMIT_BATCH_FOR_WORKFLOW = "SUBMIT_BATCH_FOR_WORKFLOW";
 export const SUBMIT_BATCH_FOR_WORKFLOW_SUCCESS = "SUBMIT_BATCH_FOR_WORKFLOW_SUCCESS";
@@ -39,6 +40,8 @@ export const CREATE_WORKFLOW_FAILURE = "CREATE_WORKFLOW_FAILURE";
 export const CREATE_WORKFLOW_SUCCESS = "CREATE_WORKFLOW_SUCCESS";
 export const EDIT_WORKFLOW_ITEM = "EDIT_WORKFLOW_ITEM";
 export const EDIT_WORKFLOW_ITEM_SUCCESS = "EDIT_WORKFLOW_ITEM_SUCCESS";
+export const CORRECT_WORKFLOW_ITEM = "CORRECT_WORKFLOW_ITEM";
+export const CORRECT_WORKFLOW_ITEM_SUCCESS = "CORRECT_WORKFLOW_ITEM_SUCCESS";
 export const WORKFLOW_EDIT = "WORKFLOW_EDIT";
 export const HIDE_WORKFLOW_DETAILS = "HIDE_WORKFLOW_DETAILS";
 export const CLOSE_WORKFLOWITEM_DETAILS = "CLOSE_WORKFLOWITEM_DETAILS";
@@ -495,6 +498,34 @@ export function showEditDialog(
   };
 }
 
+// TODO
+export function showCorrectionDialog(
+  id,
+  displayName,
+  amount,
+  exchangeRate,
+  amountType,
+  description,
+  currency,
+  documents,
+  dueDate,
+  workflowitemType
+) {
+  return {
+    type: SHOW_WORKFLOW_CORRECT,
+    id,
+    displayName,
+    amount,
+    exchangeRate,
+    amountType,
+    description,
+    currency,
+    documents,
+    dueDate,
+    workflowitemType
+  };
+}
+
 export function storeWorkflowName(name) {
   return {
     type: WORKFLOW_NAME,
@@ -641,6 +672,16 @@ export function createWorkflowItem(
 export function editWorkflowItem(projectId, subprojectId, workflowitemId, changes) {
   return {
     type: EDIT_WORKFLOW_ITEM,
+    projectId,
+    subprojectId,
+    workflowitemId,
+    changes
+  };
+}
+
+export function correctWorkflowItem(projectId, subprojectId, workflowitemId, changes) {
+  return {
+    type: CORRECT_WORKFLOW_ITEM,
     projectId,
     subprojectId,
     workflowitemId,

@@ -9,6 +9,7 @@ import { fetchVersions, setStorageServiceAvailable } from "../Status/actions";
 
 import {
   assignWorkflowItem,
+  correctWorkflowItem,
   createWorkflowItem,
   defaultWorkflowExchangeRate,
   editWorkflowItem,
@@ -85,6 +86,7 @@ const mapStateToProps = (state) => {
     workflowToAdd: state.getIn(["workflow", "workflowToAdd"]),
     creationDialogShown: state.getIn(["workflow", "creationDialogShown"]),
     editDialogShown: state.getIn(["workflow", "editDialogShown"]),
+    correctionDialogShown: state.getIn(["workflow", "correctionDialogShown"]),
     dialogTitle: state.getIn(["workflow", "dialogTitle"]),
     workflowItems: state.getIn(["workflow", "workflowItems"]),
     currentStep: state.getIn(["workflow", "currentStep"]),
@@ -108,6 +110,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     createWorkflowitem: (...workflowitemData) => dispatch(createWorkflowItem(...workflowitemData)),
     editWorkflowItem: (pId, sId, wId, changes) => dispatch(editWorkflowItem(pId, sId, wId, changes)),
+    correctWorkflowItem: (pId, sId, wId, changes) => dispatch(correctWorkflowItem(pId, sId, wId, changes)),
     storeWorkflowComment: (comment) => dispatch(storeWorkflowComment(comment)),
     storeWorkflowCurrency: (currency) => dispatch(storeWorkflowCurrency(currency)),
     storeWorkflowAmount: (amount) => dispatch(storeWorkflowAmount(amount)),

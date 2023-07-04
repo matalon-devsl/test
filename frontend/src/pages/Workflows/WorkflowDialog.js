@@ -124,6 +124,75 @@ const handleEdit = (props) => {
   onDialogCancel();
 };
 
+const handleCorrect = (props) => {
+  console.log(props);
+  const { createWorkflowItem, onDialogCancel, workflowItems, workflowToAdd, location, storeSnackbarMessage } = props;
+  const originalWorkflowItem = workflowItems.find((workflowItem) => workflowItem.data.id === workflowToAdd.id).data;
+
+  if (workflowToAdd.amountType === "N/A") {
+    if (workflowToAdd.amountType === originalWorkflowItem.amountType) {
+      delete workflowToAdd.amount;
+      delete workflowToAdd.currency;
+      delete workflowToAdd.exchangeRate;
+    } else {
+      workflowToAdd.amount = "";
+      workflowToAdd.currency = "";
+      workflowToAdd.exchangeRate = 1;
+    }
+  }
+  const changes = compareWorkflowItems(originalWorkflowItem, workflowToAdd);
+  if (changes) {
+    const projectId = location.pathname.split("/")[2];
+    const subprojectId = location.pathname.split("/")[3];
+    if (changes.amount) {
+      changes.amount = fromAmountString(changes.amount).toString();
+    }
+    if (changes.exchangeRate) {
+      changes.exchangeRate = fromAmountString(changes.exchangeRate).toString();
+    }
+
+    // editWorkflowItem(projectId, subprojectId, workflowToAdd.id, changes);
+    const { projectDisplayName, subprojectDisplayName } = props;
+
+    const {
+      displayName,
+      amount,
+      amountType,
+      currency,
+      description,
+      status,
+      documents,
+      exchangeRate,
+      dueDate,
+      workflowitemType
+    } = workflowToAdd;
+
+    // TODO: create new workflowitem reflecting the desired changes
+    console.log(displayName);
+    createWorkflowItem(
+      displayName,
+      fromAmountString(amount).toString(),
+      fromAmountString(exchangeRate).toString(),
+      amountType,
+      currency,
+      description,
+      status,
+      documents,
+      dueDate,
+      workflowitemType,
+      projectDisplayName,
+      subprojectDisplayName
+    );
+  }
+  storeSnackbarMessage(
+    strings.formatString(
+      strings.snackbar.update_succeed_message,
+      shortenedDisplayName(originalWorkflowItem.displayName)
+    )
+  );
+  onDialogCancel();
+};
+
 const getDropdownMenuItems = (types) => {
   return types.map((type, index) => {
     return (
@@ -242,6 +311,7 @@ const WorkflowDialog = (props) => {
     workflowItems,
     workflowToAdd,
     editDialogShown,
+    correctionDialogShown,
     creationDialogShown,
     storeWorkflowDocument,
     currentUser,
@@ -289,15 +359,23 @@ const WorkflowDialog = (props) => {
     };
   }, [setStorageServiceAvailable, versions]);
 
-  const specificProps = editDialogShown
-    ? {
-        handleSubmit: handleEdit,
-        dialogShown: editDialogShown
-      }
-    : {
-        handleSubmit: handleCreate,
-        dialogShown: creationDialogShown
-      };
+  let specificProps = undefined;
+  if (correctionDialogShown) {
+    specificProps = {
+      handleSubmit: handleCorrect,
+      dialogShown: correctionDialogShown
+    };
+  } else if (editDialogShown) {
+    specificProps = {
+      handleSubmit: handleEdit,
+      dialogShown: editDialogShown
+    };
+  } else
+    specificProps = {
+      handleSubmit: handleCreate,
+      dialogShown: creationDialogShown
+    };
+
   const { displayName, amountType, amount } = workflowToAdd;
   const exchangeRate = fromAmountString(workflowToAdd.exchangeRate);
   const changes = compareObjects(workflowItems, workflowToAdd);
@@ -332,7 +410,7 @@ const WorkflowDialog = (props) => {
     }
   ];
 
-  if (storageServiceAvailable || !(editDialogShown || creationDialogShown)) {
+  if (storageServiceAvailable || !(editDialogShown || creationDialogShown || correctionDialogShown)) {
     steps.push(documentStep);
   }
 

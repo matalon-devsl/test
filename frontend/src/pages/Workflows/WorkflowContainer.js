@@ -36,6 +36,7 @@ import {
   postSubProjectEdit,
   reorderWorkflowItems,
   saveWorkflowItemsBeforeSort,
+  showCorrectionDialog,
   showCreateDialog,
   showEditDialog,
   showReasonDialog,
@@ -189,6 +190,32 @@ const mapDispatchToProps = (dispatch, _ownProps) => {
     ) =>
       dispatch(
         showEditDialog(
+          id,
+          displayName,
+          amount,
+          exchangeRate,
+          amountType,
+          description,
+          currency,
+          documents,
+          dueDate,
+          workflowitemType
+        )
+      ),
+    showCorrectionDialog: (
+      id,
+      displayName,
+      amount,
+      exchangeRate,
+      amountType,
+      description,
+      currency,
+      documents,
+      dueDate,
+      workflowitemType
+    ) =>
+      dispatch(
+        showCorrectionDialog(
           id,
           displayName,
           amount,

@@ -3,6 +3,7 @@ import { Draggable } from "react-beautiful-dnd";
 import _isEmpty from "lodash/isEmpty";
 
 import AttachmentIcon from "@mui/icons-material/Attachment";
+import BackspaceIcon from "@mui/icons-material/Backspace";
 import RejectedIcon from "@mui/icons-material/Block";
 import DoneIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
@@ -269,6 +270,40 @@ const editWorkflow = (
   );
 };
 
+const correctWorkflowitem = (
+  {
+    id,
+    displayName,
+    amount,
+    exchangeRate,
+    amountType,
+    currency,
+    description,
+    _status,
+    documents,
+    dueDate,
+    workflowitemType
+  },
+  props
+) => {
+  // Otherwise we need to deal with undefined which causes errors in the editDialog
+  const workflowitemAmount = amount ? amount : "";
+  const workflowitemCurrency = currency ? currency : props.currency;
+  exchangeRate = parseFloat(exchangeRate);
+  props.showCorrectionDialog(
+    id,
+    displayName,
+    toAmountString(workflowitemAmount),
+    exchangeRate,
+    amountType,
+    description,
+    workflowitemCurrency,
+    documents,
+    dueDate,
+    workflowitemType
+  );
+};
+
 const getInfoButton = (props, status, workflowSortEnabled, workflow) => {
   const { openWorkflowDetails, projectId, subProjectId } = props;
 
@@ -398,7 +433,8 @@ const renderActionButtons = ({
   additionalData,
   rejectReason,
   showReasonDialog,
-  reject
+  reject,
+  correct
 }) => {
   const additionalDataDisabled = _isEmpty(additionalData) || workflowSortEnabled;
   const editDisabled = !canEditWorkflow || workflowSortEnabled;
@@ -457,7 +493,6 @@ const renderActionButtons = ({
               iconButtonStyle={getButtonStyle(workflowSortEnabled, status)}
               data-test="reject-workflowitem"
             />
-
             <ActionButton
               ariaLabel="close workflowitem"
               onClick={closeDisabled ? undefined : close}
@@ -481,6 +516,18 @@ const renderActionButtons = ({
           status={status}
           iconButtonStyle={getButtonStyle(workflowSortEnabled, status)}
           data-test="closed-workflowitem-reject-reason"
+        />
+
+        <ActionButton
+          ariaLabel="correct workflowitem"
+          notVisible={status !== "closed"}
+          onClick={correct}
+          icon={<BackspaceIcon />}
+          title={strings.common.correct}
+          workflowSortEnabled={workflowSortEnabled}
+          status={status}
+          iconButtonStyle={getButtonStyle(workflowSortEnabled, status)}
+          data-test="correct-workflowitem"
         />
       </div>
     </div>
@@ -586,7 +633,8 @@ export const WorkflowItem = ({
                   additionalData,
                   rejectReason,
                   showReasonDialog: () => props.showReasonDialog(rejectReason),
-                  reject: () => props.rejectWorkflowItem(id)
+                  reject: () => props.rejectWorkflowItem(id),
+                  correct: correctWorkflowitem.bind(this, workflow.data, props)
                 })}
               </div>
             </Card>
