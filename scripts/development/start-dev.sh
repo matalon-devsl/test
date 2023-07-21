@@ -277,10 +277,10 @@ else
     if [ "$WITH_PROVISIONING" = false ]; then
         # Default Setup here
         echo "INFO: Setup slim TruBudget environment without provisioning ..."
-        COMPOSE_SERVICES="alpha-node alpha-api frontend"
+        COMPOSE_SERVICES="alpha-node alpha-api frontend jaeger"
     else
         echo "INFO: Setup slim TruBudget environment with provisioning ..."
-        COMPOSE_SERVICES="alpha-node alpha-api provisioning frontend"
+        COMPOSE_SERVICES="alpha-node alpha-api provisioning frontend jaeger"
     fi
 fi
 
@@ -305,7 +305,8 @@ fi
 
 # Start docker containers
 echo "INFO: Executing command: $COMPOSE up $LOG_OPTION $COMPOSE_SERVICES $ENABLED_SERVICES $BETA_SERVICES"
-$COMPOSE up $LOG_OPTION $COMPOSE_SERVICES $ENABLED_SERVICES $BETA_SERVICES
+### TODO undo changes
+$COMPOSE up $LOG_OPTION $COMPOSE_SERVICES $ENABLED_SERVICES $BETA_SERVICES --force-recreate --build alpha-api
 
 if [ "$IS_LOG_ENABLED" = false ]; then
     echo "INFO: Docker container are started without logging"
