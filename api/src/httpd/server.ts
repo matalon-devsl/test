@@ -1,5 +1,5 @@
-import { useAzureTelemetry } from "./instrumentation";
-useAzureTelemetry(); // has to be imported before fastify and called
+import { useTelemetry } from "./instrumentation";
+useTelemetry(); // has to be imported before fastify and called
 
 import Ajv from "ajv";
 import { fastify, FastifyInstance, FastifyReply, FastifyRequest } from "fastify";

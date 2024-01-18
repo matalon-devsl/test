@@ -4,7 +4,7 @@ import { FastifyInstrumentation } from "@opentelemetry/instrumentation-fastify";
 import { metrics, trace, ProxyTracerProvider } from "@opentelemetry/api";
 import { config } from "../config";
 
-export const useAzureTelemetry = (): void => {
+export const useTelemetry = (): void => {
   if (config.azureMonitorConnectionString) {
     const options: AzureMonitorOpenTelemetryOptions = {
       azureMonitorExporterOptions: {
@@ -27,5 +27,7 @@ export const useAzureTelemetry = (): void => {
       // OpenTelemetry meter provider
       meterProvider: meterProvider,
     });
+  } else {
+    // nothing and plan is to support different telemetry collector
   }
 };
