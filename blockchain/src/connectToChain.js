@@ -98,7 +98,10 @@ function startBeta(
     // Store own wallet address into global "address"
     if (match) {
       address = match[0];
-      log.info("Wallet address registered. Entry added in nodes stream of network of alpha node, approval needed.");
+      // TODO change message this is not necessarily true.
+      log.info(
+        `Wallet address ${address} registered. Entry added in nodes stream of network of alpha node, approval needed.`,
+      );
     }
   });
 
@@ -113,43 +116,47 @@ function startBeta(
 
 function askAlphaForPermissions(address, organization, proto, host, port, certPath, certCaPath, certKeyPath) {
   const url = `${proto}://${host}:${port}/api/network.registerNode`;
-  log.info(`Trying to register at ${url}`);
-  if (certPath) {
-    log.debug(`Connecting with alpha node using certificate ${certPath}, ca ${certCaPath},key ${certKeyPath} ...`);
 
-    const httpsAgent = new https.Agent(
-      certCaPath && certKeyPath
-        ? {
-            cert: fs.readFileSync(certPath),
-            ca: fs.readFileSync(certCaPath),
-            key: fs.readFileSync(certKeyPath),
-            rejectUnauthorized: process.env.NODE_ENV !== "production",
-          }
-        : {
-            cert: fs.readFileSync(certPath),
-            rejectUnauthorized: process.env.NODE_ENV !== "production",
-          },
-    );
-    return axios.post(
-      url,
-      {
-        apiVersion: "1.0",
-        data: {
-          address,
-          organization,
-        },
-      },
-      { httpsAgent },
-    );
-  }
-  log.debug("Connecting with alpha node without certificate ...");
-  return axios.post(url, {
-    apiVersion: "1.0",
-    data: {
-      address,
-      organization,
-    },
-  });
+  log.info(`** NOT trying to register at ${url}`);
+  return;
+  // TODO uncomment this and delete the above two lines
+  // log.info(`Trying to register at ${url}`);
+  // if (certPath) {
+  //   log.debug(`Connecting with alpha node using certificate ${certPath}, ca ${certCaPath},key ${certKeyPath} ...`);
+
+  //   const httpsAgent = new https.Agent(
+  //     certCaPath && certKeyPath
+  //       ? {
+  //           cert: fs.readFileSync(certPath),
+  //           ca: fs.readFileSync(certCaPath),
+  //           key: fs.readFileSync(certKeyPath),
+  //           rejectUnauthorized: process.env.NODE_ENV !== "production",
+  //         }
+  //       : {
+  //           cert: fs.readFileSync(certPath),
+  //           rejectUnauthorized: process.env.NODE_ENV !== "production",
+  //         },
+  //   );
+  //   return axios.post(
+  //     url,
+  //     {
+  //       apiVersion: "1.0",
+  //       data: {
+  //         address,
+  //         organization,
+  //       },
+  //     },
+  //     { httpsAgent },
+  //   );
+  // }
+  // log.debug("Connecting with alpha node without certificate ...");
+  // return axios.post(url, {
+  //   apiVersion: "1.0",
+  //   data: {
+  //     address,
+  //     organization,
+  //   },
+  // });
 }
 
 async function registerNodeAtAlpha(organization, proto, host, port, certPath, certCaPath, certKeyPath) {
